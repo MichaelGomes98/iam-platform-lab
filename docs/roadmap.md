@@ -8,10 +8,16 @@
 - [x] Audit page
 
 ## Phase 2 - Backend API
-- [ ] FastAPI setup
-- [ ] User API
-- [ ] Role API
-- [ ] Audit API
+- [x] FastAPI installation
+- [x] GET /users
+- [x] GET /groups
+- [x] GET /audits
+- [ ] POST /users
+- [ ] POST /groups
+- [ ] PUT /users/{username}
+- [ ] PUT /groups/{group_name}
+- [ ] DELETE /users/{username}
+- [ ] DELETE /groups/{group_name}
 
 ## Phase 3 - Keycloak
 - [ ] Install Keycloak
