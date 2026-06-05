@@ -3,7 +3,6 @@
 ## Phase 1 - Frontend Portal
 - [x] Dashboard
 - [x] Users page
-- [x] Roles page
 - [x] Groups page
 - [x] Audit page
 
@@ -14,44 +13,58 @@
 - [x] GET /audits
 - [x] POST /users
 - [x] POST /groups
+- [x] POST /audits
 - [x] PUT /users/{username}
 - [x] PUT /groups/{group_name}
 - [x] DELETE /users/{username}
 - [x] DELETE /groups/{group_name}
+- [x] GET /health
 
-## Phase 3 - Keycloak
+## Phase 3 - Frontend ↔ Backend Integration
+- [x] Connect Users page to API
+- [x] Connect Groups page to API
+- [x] Connect Audits page to API
+- [x] Connect Dashboard to API
+- [ ] Create User from frontend
+- [ ] Create Group from frontend
+- [ ] Update User from frontend
+- [ ] Update Group from frontend
+- [ ] Delete User from frontend
+- [ ] Delete Group from frontend
+
+## Phase 4 - Keycloak
 - [ ] Install Keycloak
 - [ ] Configure realm
-- [ ] Configure roles
 - [ ] Configure groups
+- [ ] Sync users from Keycloak
 
-## Phase 4 - Authentication
+## Phase 5 - Authentication
 - [ ] OIDC login
 - [ ] JWT validation
 - [ ] Logout
 
-## Phase 5 - Audit Database
+## Phase 6 - Audit Database
 - [ ] PostgreSQL
-- [ ] Audit logs
+- [ ] Store audit logs in database
 
-## Phase 6 - Docker
+## Phase 7 - Docker
 - [ ] Dockerize frontend
 - [ ] Dockerize backend
 - [ ] Dockerize Keycloak
 
-## Phase 7 - Docker Compose
+## Phase 8 - Docker Compose
 - [ ] Local platform deployment
 
-## Phase 8 - Kubernetes
+## Phase 9 - Kubernetes
 - [ ] Deploy frontend
 - [ ] Deploy backend
 - [ ] Deploy Keycloak
 
-## Phase 9 - CI/CD
+## Phase 10 - CI/CD
 - [ ] GitHub Actions
 - [ ] Automated tests
 - [ ] Automated deployment
 
-## Phase 10 - Cloud
+## Phase 11 - Cloud
 - [ ] Terraform
 - [ ] Azure deployment
