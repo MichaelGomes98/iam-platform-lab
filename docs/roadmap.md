@@ -12,12 +12,12 @@
 - [x] GET /users
 - [x] GET /groups
 - [x] GET /audits
-- [ ] POST /users
-- [ ] POST /groups
-- [ ] PUT /users/{username}
-- [ ] PUT /groups/{group_name}
-- [ ] DELETE /users/{username}
-- [ ] DELETE /groups/{group_name}
+- [x] POST /users
+- [x] POST /groups
+- [x] PUT /users/{username}
+- [x] PUT /groups/{group_name}
+- [x] DELETE /users/{username}
+- [x] DELETE /groups/{group_name}
 
 ## Phase 3 - Keycloak
 - [ ] Install Keycloak
