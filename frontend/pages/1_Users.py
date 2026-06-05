@@ -1,16 +1,25 @@
 import streamlit as st
-import pandas as pd
+from data import users
 
 st.title("👤 Users")
 
 if st.button("Create User"):
     st.success("User creation requested")
+if st.button("Disable User"):
+    st.success("User disabled")
+if st.button("Enable User"):
+    st.success("User enabled")
 
-users = pd.DataFrame(
-    {
-        "Username": ["john.doe", "alice.smith", "bob.test"],
-        "Status": ["Active", "Active", "Disabled"],
-    }
+status_filter = st.selectbox(
+    "Filter by status",
+    ["All", "Active", "Disabled"]
 )
 
-st.dataframe(users)
+if status_filter == "All":
+    filtered_users = users
+else:
+    filtered_users = users[
+        users["Status"] == status_filter
+    ]
+
+st.dataframe(filtered_users)
