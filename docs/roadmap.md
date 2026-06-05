@@ -1,11 +1,11 @@
 # IAM Platform Lab Roadmap
 
 ## Phase 1 - Frontend Portal
-- [ ] Dashboard
-- [ ] Users page
-- [ ] Roles page
-- [ ] Groups page
-- [ ] Audit page
+- [x] Dashboard
+- [x] Users page
+- [x] Roles page
+- [x] Groups page
+- [x] Audit page
 
 ## Phase 2 - Backend API
 - [ ] FastAPI setup
