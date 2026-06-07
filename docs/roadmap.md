@@ -27,7 +27,7 @@
 - [x] Connect Dashboard to API
 - [x] Create User from frontend
 - [x] Create Group from frontend
-- [ ] Update User from frontend
+- [x] Update User from frontend
 - [ ] Delete User from frontend
 - [ ] Delete Group from frontend
 

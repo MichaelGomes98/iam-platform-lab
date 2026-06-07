@@ -180,7 +180,7 @@ iam-platform-lab/
 
 ## Clone Repository
 
-git clone https://github.com/your-username/iam-platform-lab.git
+git clone https://github.com/MichaelGomes98/iam-platform-lab.git
 
 cd iam-platform-lab
 

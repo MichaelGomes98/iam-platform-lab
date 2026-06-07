@@ -3,13 +3,13 @@ import requests
 import pandas as pd
 
 # Retrieve users from FastAPI backend
-response = requests.get(
+users_response = requests.get(
     "http://127.0.0.1:8000/users"
 )
 
 # Convert API response to DataFrame
-if response.status_code == 200:
-    users = pd.DataFrame(response.json())
+if users_response.status_code == 200:
+    users = pd.DataFrame(users_response.json())
 else:
     st.error("Unable to retrieve users")
 
@@ -70,14 +70,53 @@ with st.expander("Create User"):
                 st.error("User creation failed")
 
 # ==================================================
-# User actions (In progress)
+# User disabled 
 # ==================================================
 
-if st.button("Disable User"):
-    st.success("User disabled")
+with st.expander("Disable / Enable User"):
 
-if st.button("Enable User"):
-    st.success("User enabled")
+    all_users = users_response.json()
+
+    usernames = [
+        user["username"]
+        for user in all_users
+    ]
+
+    selected_user = st.selectbox(
+        "Select User",
+        usernames
+    )
+
+    col1, col2 = st.columns(2)
+
+    with col1:
+        disable_clicked = st.button("Disable Selected User")
+
+    with col2:
+        enable_clicked = st.button("Enable Selected User")
+
+    if disable_clicked:
+
+        response = requests.put(
+            f"http://127.0.0.1:8000/users/{selected_user}",
+            json={"status": "Disabled"}
+        )
+
+        if response.status_code == 200:
+            st.success("User disabled")
+            st.rerun()
+
+    if enable_clicked:
+
+        response = requests.put(
+            f"http://127.0.0.1:8000/users/{selected_user}",
+            json={"status": "Active"}
+        )
+
+        if response.status_code == 200:
+            st.success("User enabled")
+            st.rerun()
+
 
 # ==================================================
 # User filtering
