@@ -26,7 +26,7 @@
 - [x] Connect Audits page to API
 - [x] Connect Dashboard to API
 - [x] Create User from frontend
-- [ ] Create Group from frontend
+- [x] Create Group from frontend
 - [ ] Update User from frontend
 - [ ] Update Group from frontend
 - [ ] Delete User from frontend
