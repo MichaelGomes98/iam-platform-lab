@@ -32,8 +32,8 @@
 - [x] Delete Group from frontend
 
 ## Phase 4 - Keycloak
-- [ ] Install Keycloak
-- [ ] Configure realm
+- [x] Install Keycloak
+- [x] Configure realm
 - [ ] Configure groups
 - [ ] Sync users from Keycloak
 
