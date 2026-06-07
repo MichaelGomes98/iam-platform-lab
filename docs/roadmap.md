@@ -34,7 +34,7 @@
 ## Phase 4 - Keycloak
 - [x] Install Keycloak
 - [x] Configure realm
-- [ ] Configure groups
+- [x] Configure groups
 - [ ] Sync users from Keycloak
 
 ## Phase 5 - Authentication
