@@ -28,7 +28,6 @@
 - [x] Create User from frontend
 - [x] Create Group from frontend
 - [ ] Update User from frontend
-- [ ] Update Group from frontend
 - [ ] Delete User from frontend
 - [ ] Delete Group from frontend
 
