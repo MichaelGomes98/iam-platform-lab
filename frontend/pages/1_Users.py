@@ -117,6 +117,41 @@ with st.expander("Disable / Enable User"):
             st.success("User enabled")
             st.rerun()
 
+# ==================================================
+# User deleted 
+# ==================================================
+
+with st.expander("Delete User"):
+
+    all_users_for_delete = users_response.json()
+
+    usernames = [
+        user["username"]
+        for user in all_users_for_delete
+    ]
+
+    selected_user_to_delete = st.selectbox(
+        "Select User",
+        usernames,
+        key="delete_user"
+    )
+
+    delete_clicked = st.button(
+        "Delete Selected User"
+    )
+
+    if delete_clicked:
+
+        response = requests.delete(
+            f"http://127.0.0.1:8000/users/{selected_user_to_delete}"
+        )
+
+        if response.status_code == 200:
+            st.success("User deleted")
+            st.rerun()
+        else:
+            st.error("Unable to delete user")
+
 
 # ==================================================
 # User filtering

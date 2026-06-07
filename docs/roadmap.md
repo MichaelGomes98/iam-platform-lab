@@ -28,8 +28,8 @@
 - [x] Create User from frontend
 - [x] Create Group from frontend
 - [x] Update User from frontend
-- [ ] Delete User from frontend
-- [ ] Delete Group from frontend
+- [x] Delete User from frontend
+- [x] Delete Group from frontend
 
 ## Phase 4 - Keycloak
 - [ ] Install Keycloak
