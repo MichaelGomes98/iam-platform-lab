@@ -154,6 +154,7 @@ def get_users():
 
 @app.post("/users")
 def create_user(user: dict):
+    print(user)
     post_keycloak_create_users(user)
     return user
 

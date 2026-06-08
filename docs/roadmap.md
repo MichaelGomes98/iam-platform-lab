@@ -35,7 +35,7 @@
 - [x] Install Keycloak
 - [x] Configure realm
 - [x] Configure groups
-- [ ] Sync users from Keycloak
+- [x] Sync users from Keycloak
 
 ## Phase 5 - Authentication
 - [ ] OIDC login
