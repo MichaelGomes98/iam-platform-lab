@@ -1,6 +1,48 @@
 from fastapi import FastAPI
+from dotenv import load_dotenv
+import requests
+import os
 
+load_dotenv()
 app = FastAPI()
+
+def get_keycloak_token():
+    data = {
+        "grant_type" : "client_credentials",
+        "client_id" : "iam-backend",
+        "client_secret" : os.getenv("KEYCLOAK_CLIENT_SECRET")
+    }
+    url = "http://localhost:8081/realms/IAM-LAB/protocol/openid-connect/token"
+    token_response = requests.post(
+        url, 
+        data = data)
+    return token_response.json()["access_token"]
+
+def get_keycloak_users():
+    token = get_keycloak_token()
+    url_users = "http://localhost:8081/admin/realms/IAM-LAB/users"
+    headers = {
+    "Authorization": f"Bearer {token}"
+    }
+    get_all_users = requests.get(url_users, headers=headers) 
+    return get_all_users.json()
+
+def filter_users_attributs():
+    users = []
+    all_users = get_keycloak_users()
+    for user in all_users :
+        {
+        users.append(
+        {
+        "username": user["username"],
+        "firstName": user["firstName"],
+        "lastName": user["lastName"],
+        "enabled": user["enabled"]
+        }
+        )
+        },
+    print(users)
+    return users
 
 
 users = [
@@ -88,7 +130,7 @@ def root():
 
 @app.get("/users")
 def get_users():
-    return users
+    return get_keycloak_users()
 
 @app.post("/users")
 def create_user(user: dict):
