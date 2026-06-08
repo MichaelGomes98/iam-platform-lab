@@ -41,8 +41,28 @@ def filter_users_attributs():
         }
         )
         },
-    print(users)
     return users
+
+def post_keycloak_create_users(new_user: dict):
+    token = get_keycloak_token()
+
+    url = "http://localhost:8081/admin/realms/IAM-LAB/users"
+
+    headers = {
+        "Authorization": f"Bearer {token}",
+        "Content-Type": "application/json"
+    }
+
+    response = requests.post(
+        url,
+        headers=headers,
+        json=new_user
+    )
+
+    print(response.status_code)
+    print(response.text)
+
+    return response
 
 
 users = [
@@ -130,15 +150,12 @@ def root():
 
 @app.get("/users")
 def get_users():
-    return get_keycloak_users()
+    return filter_users_attributs()
 
 @app.post("/users")
 def create_user(user: dict):
-    users.append(user)
-    return {
-        "message": "User created",
-        "user": user
-    }
+    post_keycloak_create_users(user)
+    return user
 
 @app.get("/groups")
 def get_groups():

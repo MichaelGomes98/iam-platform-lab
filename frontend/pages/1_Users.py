@@ -50,10 +50,10 @@ with st.expander("Create User"):
             # Build user
             new_user = {
                 "username": username,
-                "first_name": first_name,
-                "last_name": last_name,
-                "group": group,
-                "status": "Active"
+                "firstName": first_name,
+                "lastName": last_name,
+                #"group": group,
+                "enabled": True
             }
 
             # Call FastAPI endpoint
