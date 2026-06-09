@@ -159,14 +159,20 @@ with st.expander("Delete User"):
 
 status_filter = st.selectbox(
     "Filter by status",
-    ["All", "Active", "Disabled"]
+    ["All", "Enabled", "Disabled"]
 )
 
 if status_filter == "All":
     filtered_users = users
+
+elif status_filter == "Enabled":
+    filtered_users = users[
+        users["enabled"] == True
+    ]
+
 else:
     filtered_users = users[
-        users["status"] == status_filter
+        users["enabled"] == False
     ]
 
 # Display users table

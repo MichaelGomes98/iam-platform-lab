@@ -86,6 +86,26 @@ def put_keycloak_update_user(user_id: str, enabled: bool):
 
     return response
 
+def delete_keycloak_user(user_id: str):
+
+    token = get_keycloak_token()
+
+    url = f"http://localhost:8081/admin/realms/IAM-LAB/users/{user_id}"
+
+    headers = {
+        "Authorization": f"Bearer {token}",
+        "Content-Type": "application/json"
+    }
+
+    response = requests.delete(
+        url,
+        headers=headers,
+    )
+
+    print(response.status_code)
+
+    return response
+
 users = [
     {
         "username": "john.doe",
@@ -205,12 +225,24 @@ def create_audit(audit: dict):
 
 @app.delete("/users/{username}")
 def delete_user(username: str):
-    for user in users:
+
+    all_users = get_keycloak_users()
+
+    for user in all_users:
+
         if user["username"] == username:
-            users.remove(user)
+
+            user_id = user["id"]
+
+            response = delete_keycloak_user(user_id)
+
+            if response.status_code == 204:
+                return {
+                    "message": "User deleted"
+                }
 
             return {
-                "message": "User deleted"
+                "message": "Delete failed"
             }
 
     return {
