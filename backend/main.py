@@ -65,6 +65,27 @@ def post_keycloak_create_users(new_user: dict):
     return response
 
 
+def put_keycloak_update_user(user_id: str, enabled: bool):
+
+    token = get_keycloak_token()
+
+    url = f"http://localhost:8081/admin/realms/IAM-LAB/users/{user_id}"
+
+    headers = {
+        "Authorization": f"Bearer {token}",
+        "Content-Type": "application/json"
+    }
+
+    response = requests.put(
+        url,
+        headers=headers,
+        json={
+            "enabled": enabled
+        }
+    )
+
+    return response
+
 users = [
     {
         "username": "john.doe",
@@ -210,13 +231,24 @@ def delete_group(group_name: str):
 
 @app.put("/users/{username}")
 def update_user(username: str, updated_user: dict):
-    for user in users:
+
+    all_users = get_keycloak_users()
+
+    for user in all_users:
+
         if user["username"] == username:
-            user.update(updated_user)
+
+            user_id = user["id"]
+
+            put_keycloak_update_user(
+                user_id,
+                updated_user["enabled"]
+            )
+
             return {
-                "message": "User updated",
-                "user": user
+                "message": "User updated"
             }
+
     return {
         "message": "User not found"
     }

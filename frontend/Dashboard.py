@@ -35,7 +35,7 @@ with col1:
     st.metric("All Users", len(users))
 
 with col2:
-    st.metric("Active Users", len(users[users["status"] == "Active"]))
+    st.metric("Active Users", len(users[users["enabled"] == True]))
 
 with col3:
     st.metric("Groups", len(groups))

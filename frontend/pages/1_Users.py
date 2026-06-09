@@ -99,7 +99,7 @@ with st.expander("Disable / Enable User"):
 
         response = requests.put(
             f"http://127.0.0.1:8000/users/{selected_user}",
-            json={"status": "Disabled"}
+            json={"enabled": False}
         )
 
         if response.status_code == 200:
@@ -110,7 +110,7 @@ with st.expander("Disable / Enable User"):
 
         response = requests.put(
             f"http://127.0.0.1:8000/users/{selected_user}",
-            json={"status": "Active"}
+            json={"enabled": True}
         )
 
         if response.status_code == 200:
