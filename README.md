@@ -27,9 +27,12 @@ Backend API (FastAPI)
 
 ↓
 
+Keycloak
+
+↓
+
 Future Integrations:
 
-* Keycloak
 * PostgreSQL
 * Docker
 * Kubernetes
@@ -48,9 +51,12 @@ Future Integrations:
 * FastAPI
 * Python
 
-## Future Components
+## Current Components
 
 * Keycloak
+
+## Future Components
+
 * PostgreSQL
 * Docker
 * Kubernetes
@@ -72,7 +78,7 @@ Future Integrations:
 
 * Create users
 * Read users
-* Update users
+* Enable / Disable users
 * Delete users
 
 ## Group Management
@@ -81,6 +87,13 @@ Future Integrations:
 * Read groups
 * Update groups
 * Delete groups
+
+## Keycloak Integration
+
+* Synchronize users from Keycloak
+* Create users in Keycloak
+* Enable / Disable users in Keycloak
+* Delete users in Keycloak
 
 ## Audit Logs
 
@@ -96,11 +109,15 @@ Future Integrations:
 # IAM Concepts Covered
 
 * User Lifecycle Management
+* User Provisioning
+* User Deprovisioning
 * Group Management
-* Audit Logging
+* Keycloak Administration
+* OAuth2 Client Credentials
 * REST API Development
 * Backend Service Design
 * Frontend / Backend Communication
+* Audit Logging
 
 Planned:
 
@@ -117,34 +134,34 @@ Planned:
 
 ## Users
 
-| Method | Endpoint          |
-| ------ | ----------------- |
-| GET    | /users            |
-| POST   | /users            |
-| PUT    | /users/{username} |
+| Method | Endpoint |
+|----------|----------|
+| GET | /users |
+| POST | /users |
+| PUT | /users/{username} |
 | DELETE | /users/{username} |
 
 ## Groups
 
-| Method | Endpoint             |
-| ------ | -------------------- |
-| GET    | /groups              |
-| POST   | /groups              |
-| PUT    | /groups/{group_name} |
+| Method | Endpoint |
+|----------|----------|
+| GET | /groups |
+| POST | /groups |
+| PUT | /groups/{group_name} |
 | DELETE | /groups/{group_name} |
 
 ## Audits
 
 | Method | Endpoint |
-| ------ | -------- |
-| GET    | /audits  |
-| POST   | /audits  |
+|----------|----------|
+| GET | /audits |
+| POST | /audits |
 
 ## Health
 
 | Method | Endpoint |
-| ------ | -------- |
-| GET    | /health  |
+|----------|----------|
+| GET | /health |
 
 ---
 
@@ -180,43 +197,59 @@ iam-platform-lab/
 
 ## Clone Repository
 
+```bash
 git clone https://github.com/MichaelGomes98/iam-platform-lab.git
 
 cd iam-platform-lab
+```
 
 ## Create Virtual Environment
 
+```bash
 py -m venv .venv
+```
 
 ## Activate Virtual Environment
 
 ### PowerShell
 
+```powershell
 .venv\Scripts\Activate.ps1
+```
 
 ### CMD
 
+```cmd
 .venv\Scripts\activate
+```
 
 ## Install Dependencies
 
-pip install streamlit fastapi uvicorn pandas requests
+```bash
+pip install streamlit fastapi uvicorn pandas requests python-dotenv
+```
 
 ---
 
 # Start Backend
 
+```bash
 uvicorn backend.main:app --reload
+```
 
 Swagger UI:
 
+```text
 http://127.0.0.1:8000/docs
+```
 
 ---
 
 # Start Frontend
 
+```bash
 streamlit run frontend/Dashboard.py
+```
 
 ---
 
@@ -250,16 +283,25 @@ streamlit run frontend/Dashboard.py
 * [x] Connect Users Page to API
 * [x] Connect Groups Page to API
 * [x] Connect Audits Page to API
-* [ ] Connect POST Actions
-* [ ] Connect PUT Actions
-* [ ] Connect DELETE Actions
+* [x] Connect POST Actions
+* [x] Connect PUT Actions
+* [x] Connect DELETE Actions
 
 ## Phase 4 - Keycloak
 
-* [ ] Install Keycloak
-* [ ] Configure Realm
-* [ ] Configure Roles
-* [ ] Configure Groups
+* [x] Install Keycloak
+* [x] Configure realm
+* [x] Configure groups
+* [x] Configure client
+* [x] Sync users from Keycloak
+* [x] Create user in Keycloak
+* [x] Enable/Disable user in Keycloak
+* [x] Delete user in Keycloak
+* [ ] Sync groups from Keycloak
+* [ ] Create group in Keycloak
+* [ ] Update group in Keycloak
+* [ ] Delete group in Keycloak
+* [ ] Assign user to group
 
 ## Phase 5 - Authentication
 

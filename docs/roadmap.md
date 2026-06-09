@@ -35,7 +35,16 @@
 - [x] Install Keycloak
 - [x] Configure realm
 - [x] Configure groups
+- [x] Configure client
 - [x] Sync users from Keycloak
+- [x] Create user in Keycloak
+- [x] Enable/Disable user in Keycloak
+- [x] Delete user in Keycloak
+- [ ] Sync groups from Keycloak
+- [ ] Create group in Keycloak
+- [ ] Update group in Keycloak
+- [ ] Delete group in Keycloak
+- [ ] Assign user to group
 
 ## Phase 5 - Authentication
 - [ ] OIDC login
