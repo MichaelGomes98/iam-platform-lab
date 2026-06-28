@@ -11,7 +11,16 @@ groups_response = requests.get(
 )
 
 if groups_response.status_code == 200:
-    groups = pd.DataFrame(groups_response.json())
+
+    groups = pd.DataFrame(
+        [
+            {
+                "name": group["name"]
+            }
+            for group in groups_response.json()
+        ]
+    )
+
 else:
     st.error("Unable to retrieve groups")
 
@@ -61,9 +70,9 @@ with st.expander("Delete Group"):
     all_groups = groups_response.json()
 
     group_names = [
-        group["group"]
+        group["name"]
         for group in all_groups
-    ]
+]
 
     selected_group = st.selectbox(
         "Select Group",

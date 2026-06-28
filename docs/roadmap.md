@@ -40,10 +40,9 @@
 - [x] Create user in Keycloak
 - [x] Enable/Disable user in Keycloak
 - [x] Delete user in Keycloak
-- [ ] Sync groups from Keycloak
-- [ ] Create group in Keycloak
-- [ ] Update group in Keycloak
-- [ ] Delete group in Keycloak
+- [x] Sync groups from Keycloak
+- [x] Create group in Keycloak
+- [x] Delete group in Keycloak
 - [ ] Assign user to group
 
 ## Phase 5 - Authentication

@@ -27,6 +27,63 @@ def get_keycloak_users():
     get_all_users = requests.get(url_users, headers=headers) 
     return get_all_users.json()
 
+def get_keycloak_groups():
+
+    token = get_keycloak_token()
+
+    url_groups = "http://localhost:8081/admin/realms/IAM-LAB/groups"
+
+    headers = {
+        "Authorization": f"Bearer {token}"
+    }
+
+    response = requests.get(
+        url_groups,
+        headers=headers
+    )
+
+    return response.json()
+
+def post_keycloak_create_group(group: dict):
+
+    token = get_keycloak_token()
+
+    url = "http://localhost:8081/admin/realms/IAM-LAB/groups"
+
+    headers = {
+        "Authorization": f"Bearer {token}",
+        "Content-Type": "application/json"
+    }
+
+    response = requests.post(
+        url,
+        headers=headers,
+        json={
+            "name": group["group"]
+        }
+    )
+
+    return response
+
+def delete_keycloak_group(group_id: str):
+
+    token = get_keycloak_token()
+
+    url = f"http://localhost:8081/admin/realms/IAM-LAB/groups/{group_id}"
+
+    headers = {
+        "Authorization": f"Bearer {token}"
+    }
+
+    response = requests.delete(
+        url,
+        headers=headers
+    )
+
+    return response
+
+
+
 def filter_users_attributs():
     users = []
     all_users = get_keycloak_users()
@@ -137,20 +194,6 @@ users = [
     }
 ]
 
-groups = [
-        {
-        "group" : "IT",
-        },
-        {
-        "group" : "Finance",
-        },
-        {
-        "group" : "Marketing",
-        },
-        {
-        "group" : "Security",
-        }
-    ]
 
 audits = [
     {
@@ -201,14 +244,16 @@ def create_user(user: dict):
 
 @app.get("/groups")
 def get_groups():
-    return groups
+    return get_keycloak_groups()
 
 @app.post("/groups")
 def create_group(group: dict):
-    groups.append(group)
+
+    response = post_keycloak_create_group(group)
+
     return {
         "message": "Group created",
-        "group": group
+        "status": response.status_code
     }
 
 @app.get("/audits")
@@ -251,12 +296,20 @@ def delete_user(username: str):
 
 @app.delete("/groups/{group_name}")
 def delete_group(group_name: str):
-    for group in groups:
-        if group["group"] == group_name:
-            groups.remove(group)
-            return {
-                "message": "Group deleted"
-            }
+
+    all_groups = get_keycloak_groups()
+
+    for group in all_groups:
+
+        if group["name"] == group_name:
+
+            response = delete_keycloak_group(group["id"])
+
+            if response.status_code == 204:
+                return {
+                    "message": "Group deleted"
+                }
+
     return {
         "message": "Group not found"
     }
@@ -285,18 +338,6 @@ def update_user(username: str, updated_user: dict):
         "message": "User not found"
     }
 
-@app.put("/groups/{group_name}")
-def update_group(group_name: str, updated_group: dict):
-    for group in groups:
-        if group["group"] == group_name:
-            group.update(updated_group)
-            return {
-                "message": "Group updated",
-                "group": group
-            }
-    return {
-        "message": "Group not found"
-    }
 
 @app.get("/health")
 def health():
