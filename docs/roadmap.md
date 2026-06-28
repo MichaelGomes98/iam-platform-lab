@@ -43,7 +43,8 @@
 - [x] Sync groups from Keycloak
 - [x] Create group in Keycloak
 - [x] Delete group in Keycloak
-- [ ] Assign user to group
+- [x] Assign user to group
+- [x] Delete user to group
 
 ## Phase 5 - Authentication
 - [ ] OIDC login

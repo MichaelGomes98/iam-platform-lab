@@ -3,197 +3,290 @@ from dotenv import load_dotenv
 import requests
 import os
 
+
+# ==================================================
+# Application configuration
+# ==================================================
+
 load_dotenv()
-app = FastAPI()
+
+app = FastAPI(
+    title="IAM Platform API",
+    description="Backend API connected to Keycloak",
+    version="1.0"
+)
+
+
+# ==================================================
+# Keycloak Configuration
+# ==================================================
+
+KEYCLOAK_URL = "http://localhost:8081"
+REALM = "IAM-LAB"
+
+
+# ==================================================
+# Authentication - Get Keycloak Token
+# ==================================================
 
 def get_keycloak_token():
+
     data = {
-        "grant_type" : "client_credentials",
-        "client_id" : "iam-backend",
-        "client_secret" : os.getenv("KEYCLOAK_CLIENT_SECRET")
+        "grant_type": "client_credentials",
+        "client_id": "iam-backend",
+        "client_secret": os.getenv(
+            "KEYCLOAK_CLIENT_SECRET"
+        )
     }
-    url = "http://localhost:8081/realms/IAM-LAB/protocol/openid-connect/token"
-    token_response = requests.post(
-        url, 
-        data = data)
-    return token_response.json()["access_token"]
+
+
+    response = requests.post(
+        f"{KEYCLOAK_URL}/realms/{REALM}/protocol/openid-connect/token",
+        data=data
+    )
+
+
+    return response.json()["access_token"]
+
+
+
+# ==================================================
+# Keycloak Users Management
+# ==================================================
 
 def get_keycloak_users():
-    token = get_keycloak_token()
-    url_users = "http://localhost:8081/admin/realms/IAM-LAB/users"
-    headers = {
-    "Authorization": f"Bearer {token}"
-    }
-    get_all_users = requests.get(url_users, headers=headers) 
-    return get_all_users.json()
-
-def get_keycloak_groups():
 
     token = get_keycloak_token()
 
-    url_groups = "http://localhost:8081/admin/realms/IAM-LAB/groups"
 
     headers = {
         "Authorization": f"Bearer {token}"
     }
 
+
     response = requests.get(
-        url_groups,
+        f"{KEYCLOAK_URL}/admin/realms/{REALM}/users?briefRepresentation=false",
         headers=headers
     )
+
 
     return response.json()
 
-def post_keycloak_create_group(group: dict):
+
+
+def create_keycloak_user(user):
 
     token = get_keycloak_token()
 
-    url = "http://localhost:8081/admin/realms/IAM-LAB/groups"
 
     headers = {
         "Authorization": f"Bearer {token}",
         "Content-Type": "application/json"
     }
 
-    response = requests.post(
-        url,
+
+    return requests.post(
+        f"{KEYCLOAK_URL}/admin/realms/{REALM}/users",
         headers=headers,
-        json={
-            "name": group["group"]
-        }
+        json=user
     )
 
-    return response
 
-def delete_keycloak_group(group_id: str):
+
+def update_keycloak_user(user_id, enabled):
 
     token = get_keycloak_token()
 
-    url = f"http://localhost:8081/admin/realms/IAM-LAB/groups/{group_id}"
-
-    headers = {
-        "Authorization": f"Bearer {token}"
-    }
-
-    response = requests.delete(
-        url,
-        headers=headers
-    )
-
-    return response
-
-
-
-def filter_users_attributs():
-    users = []
-    all_users = get_keycloak_users()
-    for user in all_users :
-        {
-        users.append(
-        {
-        "username": user["username"],
-        "firstName": user["firstName"],
-        "lastName": user["lastName"],
-        "enabled": user["enabled"]
-        }
-        )
-        },
-    return users
-
-def post_keycloak_create_users(new_user: dict):
-    token = get_keycloak_token()
-
-    url = "http://localhost:8081/admin/realms/IAM-LAB/users"
 
     headers = {
         "Authorization": f"Bearer {token}",
         "Content-Type": "application/json"
     }
 
-    response = requests.post(
-        url,
-        headers=headers,
-        json=new_user
-    )
 
-    print(response.status_code)
-    print(response.text)
-
-    return response
-
-
-def put_keycloak_update_user(user_id: str, enabled: bool):
-
-    token = get_keycloak_token()
-
-    url = f"http://localhost:8081/admin/realms/IAM-LAB/users/{user_id}"
-
-    headers = {
-        "Authorization": f"Bearer {token}",
-        "Content-Type": "application/json"
-    }
-
-    response = requests.put(
-        url,
+    return requests.put(
+        f"{KEYCLOAK_URL}/admin/realms/{REALM}/users/{user_id}",
         headers=headers,
         json={
             "enabled": enabled
         }
     )
 
-    return response
 
-def delete_keycloak_user(user_id: str):
+
+def delete_keycloak_user(user_id):
 
     token = get_keycloak_token()
 
-    url = f"http://localhost:8081/admin/realms/IAM-LAB/users/{user_id}"
+
+    headers = {
+        "Authorization": f"Bearer {token}"
+    }
+
+
+    return requests.delete(
+        f"{KEYCLOAK_URL}/admin/realms/{REALM}/users/{user_id}",
+        headers=headers
+    )
+
+
+
+# ==================================================
+# Keycloak Groups Management
+# ==================================================
+
+def get_keycloak_groups():
+
+    token = get_keycloak_token()
+
+
+    headers = {
+        "Authorization": f"Bearer {token}"
+    }
+
+
+    response = requests.get(
+        f"{KEYCLOAK_URL}/admin/realms/{REALM}/groups",
+        headers=headers
+    )
+
+
+    return response.json()
+
+
+
+def create_keycloak_group(group):
+
+    token = get_keycloak_token()
+
 
     headers = {
         "Authorization": f"Bearer {token}",
         "Content-Type": "application/json"
     }
 
-    response = requests.delete(
-        url,
+
+    return requests.post(
+        f"{KEYCLOAK_URL}/admin/realms/{REALM}/groups",
         headers=headers,
+        json={
+            "name": group["group"]
+        }
     )
 
-    print(response.status_code)
 
-    return response
 
-users = [
-    {
-        "username": "john.doe",
-        "first_name": "John",
-        "last_name": "Doe",
-        "group": "Finance",
-        "status": "Active"
-    },
-    {
-        "username": "alice.smith",
-        "first_name": "Alice",
-        "last_name": "Smith",
-        "group": "IT",
-        "status": "Active"
-    },
-    {
-        "username": "bob.test",
-        "first_name": "Bob",
-        "last_name": "Test",
-        "group": "Marketing",
-        "status": "Disabled"
-    },
-    {
-        "username": "paul.durant",
-        "first_name": "Paul",
-        "last_name": "Durant",
-        "group": "Finance",
-        "status": "Active"
+def delete_keycloak_group(group_id):
+
+    token = get_keycloak_token()
+
+
+    headers = {
+        "Authorization": f"Bearer {token}"
     }
-]
 
+
+    return requests.delete(
+        f"{KEYCLOAK_URL}/admin/realms/{REALM}/groups/{group_id}",
+        headers=headers
+    )
+
+
+
+# ==================================================
+# User / Group relationship
+# ==================================================
+
+def get_user_groups(user_id):
+
+    token = get_keycloak_token()
+
+
+    headers = {
+        "Authorization": f"Bearer {token}"
+    }
+
+
+    response = requests.get(
+        f"{KEYCLOAK_URL}/admin/realms/{REALM}/users/{user_id}/groups",
+        headers=headers
+    )
+
+
+    return [
+        group["name"]
+        for group in response.json()
+    ]
+
+
+
+def assign_user_group(user_id, group_id):
+
+    token = get_keycloak_token()
+
+
+    headers = {
+        "Authorization": f"Bearer {token}"
+    }
+
+
+    return requests.put(
+        f"{KEYCLOAK_URL}/admin/realms/{REALM}/users/{user_id}/groups/{group_id}",
+        headers=headers
+    )
+
+
+
+def remove_user_group(user_id, group_id):
+
+    token = get_keycloak_token()
+
+
+    headers = {
+        "Authorization": f"Bearer {token}"
+    }
+
+
+    return requests.delete(
+        f"{KEYCLOAK_URL}/admin/realms/{REALM}/users/{user_id}/groups/{group_id}",
+        headers=headers
+    )
+
+
+
+# ==================================================
+# Formatting users for frontend
+# ==================================================
+
+def format_users():
+
+    formatted_users = []
+
+
+    for user in get_keycloak_users():
+
+        groups = get_user_groups(
+            user["id"]
+        )
+
+
+        formatted_users.append(
+            {
+                "username": user["username"],
+                "firstName": user["firstName"],
+                "lastName": user["lastName"],
+                "enabled": user["enabled"],
+                "groups": ", ".join(groups)
+            }
+        )
+
+
+    return formatted_users
+
+
+# ==================================================
+# Audit Logs
+# ==================================================
 
 audits = [
     {
@@ -210,137 +303,265 @@ audits = [
     },
     {
         "date": "28.05.2026",
-        "action": "Assign Role",
+        "action": "Assign User to Group",
         "made_by": "john.doe",
         "target": "alice.smith"
-    },
-    {
-        "date": "01.06.2026",
-        "action": "Create User",
-        "made_by": "paul.durant",
-        "target": "paul.durant"
-    },
-    {
-        "date": "05.06.2026",
-        "action": "Assign Role",
-        "made_by": "john.doe",
-        "target": "john.doe"
     }
 ]
 
-@app.get("/")
-def root():
-    return {"message": "IAM Platform API"}
-
-@app.get("/users")
-def get_users():
-    return filter_users_attributs()
-
-@app.post("/users")
-def create_user(user: dict):
-    print(user)
-    post_keycloak_create_users(user)
-    return user
-
-@app.get("/groups")
-def get_groups():
-    return get_keycloak_groups()
-
-@app.post("/groups")
-def create_group(group: dict):
-
-    response = post_keycloak_create_group(group)
-
-    return {
-        "message": "Group created",
-        "status": response.status_code
-    }
 
 @app.get("/audits")
 def get_audits():
+
     return audits
 
-@app.post("/audits")
-def create_audit(audit: dict):
-    audits.append(audit)
-    return{
-        "message" : "Audit created",
-        "audit" : audit
+
+# ==================================================
+# API Endpoints
+# ==================================================
+
+@app.get("/")
+def root():
+
+    return {
+        "message": "IAM Platform API"
     }
 
-@app.delete("/users/{username}")
-def delete_user(username: str):
 
-    all_users = get_keycloak_users()
 
-    for user in all_users:
+# ------------------------------
+# Users
+# ------------------------------
+
+@app.get("/users")
+def get_users():
+
+    return format_users()
+
+
+
+@app.post("/users")
+def create_user(user: dict):
+
+    response = create_keycloak_user(
+        user
+    )
+
+
+    return {
+        "status": response.status_code
+    }
+
+
+
+@app.put("/users/{username}")
+def update_user(username: str, data: dict):
+
+    for user in get_keycloak_users():
 
         if user["username"] == username:
 
-            user_id = user["id"]
+            response = update_keycloak_user(
+                user["id"],
+                data["enabled"]
+            )
 
-            response = delete_keycloak_user(user_id)
-
-            if response.status_code == 204:
-                return {
-                    "message": "User deleted"
-                }
 
             return {
-                "message": "Delete failed"
+                "status": response.status_code
             }
+
 
     return {
         "message": "User not found"
     }
 
+
+
+@app.delete("/users/{username}")
+def delete_user(username: str):
+
+    for user in get_keycloak_users():
+
+        if user["username"] == username:
+
+            response = delete_keycloak_user(
+                user["id"]
+            )
+
+
+            return {
+                "status": response.status_code
+            }
+
+
+
+    return {
+        "message": "User not found"
+    }
+
+
+
+# ------------------------------
+# Groups
+# ------------------------------
+
+@app.get("/groups")
+def get_groups():
+
+    return get_keycloak_groups()
+
+
+
+@app.post("/groups")
+def create_group(group: dict):
+
+    response = create_keycloak_group(
+        group
+    )
+
+
+    return {
+        "status": response.status_code
+    }
+
+
+
 @app.delete("/groups/{group_name}")
 def delete_group(group_name: str):
 
-    all_groups = get_keycloak_groups()
-
-    for group in all_groups:
+    for group in get_keycloak_groups():
 
         if group["name"] == group_name:
 
-            response = delete_keycloak_group(group["id"])
+            response = delete_keycloak_group(
+                group["id"]
+            )
 
-            if response.status_code == 204:
-                return {
-                    "message": "Group deleted"
-                }
+
+            return {
+                "status": response.status_code
+            }
+
+
 
     return {
         "message": "Group not found"
     }
 
-@app.put("/users/{username}")
-def update_user(username: str, updated_user: dict):
 
-    all_users = get_keycloak_users()
 
-    for user in all_users:
+# ------------------------------
+# Assign User to Group
+# ------------------------------
 
-        if user["username"] == username:
+@app.put("/users/{username}/groups/{group_name}")
+def add_user_group(username, group_name):
 
-            user_id = user["id"]
 
-            put_keycloak_update_user(
-                user_id,
-                updated_user["enabled"]
-            )
+    users = get_keycloak_users()
+    groups = get_keycloak_groups()
 
-            return {
-                "message": "User updated"
-            }
+
+    user_id = next(
+        (
+            u["id"]
+            for u in users
+            if u["username"] == username
+        ),
+        None
+    )
+
+
+    group_id = next(
+        (
+            g["id"]
+            for g in groups
+            if g["name"] == group_name
+        ),
+        None
+    )
+
+
+    if user_id and group_id:
+
+        response = assign_user_group(
+            user_id,
+            group_id
+        )
+
+
+        return {
+            "status": response.status_code
+        }
+
+
 
     return {
-        "message": "User not found"
+        "message": "User or group not found"
     }
 
 
+
+# ------------------------------
+# Remove User from Group
+# ------------------------------
+
+@app.delete("/users/{username}/groups/{group_name}")
+def remove_user_group_endpoint(username, group_name):
+
+
+    users = get_keycloak_users()
+    groups = get_keycloak_groups()
+
+
+    user_id = next(
+        (
+            u["id"]
+            for u in users
+            if u["username"] == username
+        ),
+        None
+    )
+
+
+    group_id = next(
+        (
+            g["id"]
+            for g in groups
+            if g["name"] == group_name
+        ),
+        None
+    )
+
+
+    if user_id and group_id:
+
+
+        response = remove_user_group(
+            user_id,
+            group_id
+        )
+
+
+        return {
+            "status": response.status_code
+        }
+
+
+    return {
+        "message": "User or group not found"
+    }
+
+
+
+# ------------------------------
+# Health Check
+# ------------------------------
+
 @app.get("/health")
 def health():
+
     return {
         "status": "healthy"
     }
